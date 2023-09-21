@@ -90,7 +90,7 @@ class Namer(Visitor[Scope, None]):
 
     def visitDeclaration(self, decl: Declaration, ctx: Scope) -> None:
         """
-        1. Use ctx.containsKey to find if a variable with the same name has been declared.
+        1. Use ctx.lookup to find if a variable with the same name has been declared.
         2. If not, build a new VarSymbol, and put it into the current scope using ctx.declare.
         3. Set the 'symbol' attribute of decl.
         4. If there is an initial value, visit it.
