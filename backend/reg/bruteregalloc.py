@@ -35,14 +35,14 @@ class BruteRegAlloc(RegAlloc):
             reg.used = False
 
     def accept(self, graph: CFG, info: SubroutineInfo) -> None:
-        subEmitter = self.emitter.emitSubroutine(info)
+        subEmitter = RiscvSubroutineEmitter(self.emitter, info)
         for bb in graph.iterator():
             # you need to think more here
             # maybe we don't need to alloc regs for all the basic blocks
             if bb.label is not None:
                 subEmitter.emitLabel(bb.label)
             self.localAlloc(bb, subEmitter)
-        subEmitter.emitEnd()
+        subEmitter.emitFunc()
 
     def bind(self, temp: Temp, reg: Reg):
         reg.used = True

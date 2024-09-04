@@ -11,7 +11,6 @@ from frontend.tacgen.tacgen import TACGen
 from frontend.typecheck.namer import Namer
 from frontend.typecheck.typer import Typer
 from utils.printtree import TreePrinter
-from utils.riscv import Riscv
 from utils.tac.tacprog import TACProg
 
 
@@ -57,8 +56,7 @@ def step_tac(p: Program):
 
 # Target code generation stage: Three-address code -> RISC-V assembly code
 def step_asm(p: TACProg):
-    riscvAsmEmitter = RiscvAsmEmitter(Riscv.AllocatableRegs, Riscv.CallerSaved)
-    asm = Asm(riscvAsmEmitter, BruteRegAlloc(riscvAsmEmitter))
+    asm = Asm()
     prog = asm.transform(p)
     return prog
 

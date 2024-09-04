@@ -46,10 +46,6 @@ class RiscvAsmEmitter():
 
         return (selector.seq, info)
 
-    # use info to construct a RiscvSubroutineEmitter
-    def emitSubroutine(self, info: SubroutineInfo):
-        return RiscvSubroutineEmitter(self, info)
-
     # return all the string stored in asmcodeprinter
     def emitEnd(self):
         return self.printer.close()
@@ -164,7 +160,7 @@ class RiscvSubroutineEmitter():
         self.buf.append(Riscv.RiscvLabel(label).toNative([], []))
 
     
-    def emitEnd(self):
+    def emitFunc(self):
         self.printer.printComment("start of prologue")
         self.printer.printInstr(Riscv.SPAdd(-self.nextLocalOffset))
 
