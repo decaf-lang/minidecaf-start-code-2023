@@ -1,6 +1,5 @@
 from typing import Sequence, Tuple
 
-from backend.asmemitter import AsmEmitter
 from utils.error import IllegalArgumentException
 from utils.label.label import Label, LabelKind
 from utils.riscv import Riscv, RvBinaryOp, RvUnaryOp
@@ -8,8 +7,8 @@ from utils.tac.reg import Reg
 from utils.tac.tacfunc import TACFunc
 from utils.tac.tacinstr import *
 from utils.tac.tacvisitor import TACVisitor
+from utils.asmcodeprinter import AsmCodePrinter
 
-from ..subroutineemitter import SubroutineEmitter
 from ..subroutineinfo import SubroutineInfo
 
 """
@@ -17,14 +16,15 @@ RiscvAsmEmitter: an AsmEmitter for RiscV
 """
 
 
-class RiscvAsmEmitter(AsmEmitter):
+class RiscvAsmEmitter():
     def __init__(
         self,
         allocatableRegs: list[Reg],
         callerSaveRegs: list[Reg],
-    ) -> None:
-        super().__init__(allocatableRegs, callerSaveRegs)
-
+    ):
+        self.allocatableRegs = allocatableRegs
+        self.callerSaveRegs = callerSaveRegs
+        self.printer = AsmCodePrinter()
     
         # the start of the asm code
         # int step10, you need to add the declaration of global var here
@@ -110,9 +110,10 @@ class RiscvAsmEmitter(AsmEmitter):
 RiscvAsmEmitter: an SubroutineEmitter for RiscV
 """
 
-class RiscvSubroutineEmitter(SubroutineEmitter):
+class RiscvSubroutineEmitter():
     def __init__(self, emitter: RiscvAsmEmitter, info: SubroutineInfo) -> None:
-        super().__init__(emitter, info)
+        self.info = info
+        self.printer = emitter.printer
         
         # + 4 is for the RA reg 
         self.nextLocalOffset = 4 * len(Riscv.CalleeSaved) + 4

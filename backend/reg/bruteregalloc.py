@@ -5,7 +5,7 @@ from backend.dataflow.cfg import CFG
 from backend.dataflow.loc import Loc
 from backend.reg.regalloc import RegAlloc
 from backend.riscv.riscvasmemitter import RiscvAsmEmitter
-from backend.subroutineemitter import SubroutineEmitter
+from backend.riscv.riscvasmemitter import RiscvSubroutineEmitter
 from backend.subroutineinfo import SubroutineInfo
 from utils.riscv import Riscv
 from utils.tac.reg import Reg
@@ -55,7 +55,7 @@ class BruteRegAlloc(RegAlloc):
             self.bindings[temp.index].occupied = False
             self.bindings.pop(temp.index)
 
-    def localAlloc(self, bb: BasicBlock, subEmitter: SubroutineEmitter):
+    def localAlloc(self, bb: BasicBlock, subEmitter: RiscvSubroutineEmitter):
         self.bindings.clear()
         for reg in self.emitter.allocatableRegs:
             reg.occupied = False
@@ -73,7 +73,7 @@ class BruteRegAlloc(RegAlloc):
         if (not bb.isEmpty()) and (bb.kind is not BlockKind.CONTINUOUS):
             self.allocForLoc(bb.locs[len(bb.locs) - 1], subEmitter)
 
-    def allocForLoc(self, loc: Loc, subEmitter: SubroutineEmitter):
+    def allocForLoc(self, loc: Loc, subEmitter: RiscvSubroutineEmitter):
         instr = loc.instr
         srcRegs: list[Reg] = []
         dstRegs: list[Reg] = []
@@ -95,7 +95,7 @@ class BruteRegAlloc(RegAlloc):
         subEmitter.emitNative(instr.toNative(dstRegs, srcRegs))
 
     def allocRegFor(
-        self, temp: Temp, isRead: bool, live: set[int], subEmitter: SubroutineEmitter
+        self, temp: Temp, isRead: bool, live: set[int], subEmitter: RiscvSubroutineEmitter
     ):
         if temp.index in self.bindings:
             return self.bindings[temp.index]
