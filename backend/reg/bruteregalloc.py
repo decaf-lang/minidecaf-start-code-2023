@@ -56,7 +56,6 @@ class BruteRegAlloc(RegAlloc):
             self.bindings.pop(temp.index)
 
     def localAlloc(self, bb: BasicBlock, subEmitter: RiscvSubroutineEmitter):
-        self.bindings.clear()
         for reg in self.emitter.allocatableRegs:
             reg.occupied = False
 
@@ -72,6 +71,8 @@ class BruteRegAlloc(RegAlloc):
 
         if (not bb.isEmpty()) and (bb.kind is not BlockKind.CONTINUOUS):
             self.allocForLoc(bb.locs[len(bb.locs) - 1], subEmitter)
+        
+        self.bindings.clear()  
 
     def allocForLoc(self, loc: Loc, subEmitter: RiscvSubroutineEmitter):
         instr = loc.instr

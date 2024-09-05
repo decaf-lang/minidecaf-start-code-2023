@@ -152,7 +152,7 @@ class RiscvSubroutineEmitter():
             )
 
     # add a NativeInstr to buf
-    # when calling the fuction emitEnd, all the instr in buf will be transformed to RiscV code
+    # when calling the fuction emitAsm, all the instr in buf will be transformed to RiscV code
     def emitAsm(self, instr: BackendInstr):
         self.buf.append(instr)
 
