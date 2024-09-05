@@ -2,11 +2,11 @@ from typing import Final, Optional
 
 from utils.label.funclabel import FuncLabel
 from utils.label.label import Label, LabelKind
-from utils.tac.nativeinstr import NativeInstr
+from utils.tac.nativeinstr import AsmInstr
 from utils.tac.reg import Reg
-from utils.tac.tacinstr import TACInstr
 from utils.tac.tacop import InstrKind
 from utils.tac.temp import Temp
+from utils.tac.backendinstr import BackendInstr
 
 from enum import Enum, auto, unique
 
@@ -75,7 +75,7 @@ class Riscv:
     FMT_OFFSET = "{}, {}({})"
     # Todo FMT4
 
-    class JumpToEpilogue(TACInstr):
+    class JumpToEpilogue(BackendInstr):
         def __init__(self, label: Label) -> None:
             super().__init__(
                 InstrKind.RET,
@@ -87,7 +87,7 @@ class Riscv:
         def __str__(self) -> str:
             return "j " + str(self.label)
 
-    class RiscvLabel(TACInstr):
+    class RiscvLabel(BackendInstr):
         def __init__(self, label: Label) -> None:
             super().__init__(InstrKind.LABEL, [], [], label)
 
@@ -97,7 +97,7 @@ class Riscv:
         def isLabel(self) -> bool:
             return True
 
-    class LoadImm(TACInstr):
+    class LoadImm(BackendInstr):
         def __init__(self, dst: Temp, value: int) -> None:
             super().__init__(InstrKind.SEQ, [dst], [], None)
             self.value = value
@@ -105,14 +105,14 @@ class Riscv:
         def __str__(self) -> str:
             return "li " + Riscv.FMT2.format(str(self.dsts[0]), self.value)
 
-    class Move(TACInstr):
+    class Move(BackendInstr):
         def __init__(self, dst: Temp, src: Temp) -> None:
             super().__init__(InstrKind.SEQ, [dst], [src], None)
 
         def __str__(self) -> str:
             return "mv " + Riscv.FMT2.format(str(self.dsts[0]), str(self.srcs[0]))
 
-    class Unary(TACInstr):
+    class Unary(BackendInstr):
         def __init__(self, op: RvUnaryOp, dst: Temp, src: Temp) -> None:
             super().__init__(InstrKind.SEQ, [dst], [src], None)
             self.op = op.__str__()[10:].lower()
@@ -122,7 +122,7 @@ class Riscv:
                 str(self.dsts[0]), str(self.srcs[0])
             )
 
-    class Binary(TACInstr):
+    class Binary(BackendInstr):
         def __init__(self, op: RvBinaryOp, dst: Temp, src0: Temp, src1: Temp) -> None:
             super().__init__(InstrKind.SEQ, [dst], [src0, src1], None)
             self.op = op.__str__()[11:].lower()
@@ -132,7 +132,7 @@ class Riscv:
                 str(self.dsts[0]), str(self.srcs[0]), str(self.srcs[1])
             )
     
-    class Branch(TACInstr):
+    class Branch(BackendInstr):
         def __init__(self, cond: Temp, target: Label) -> None:
             super().__init__(InstrKind.COND_JMP, [], [cond], target)
             self.target = target
@@ -140,7 +140,7 @@ class Riscv:
         def __str__(self) -> str:
             return "beq " + Riscv.FMT3.format(str(Riscv.ZERO), str(self.srcs[0]), str(self.target))
 
-    class Jump(TACInstr):
+    class Jump(BackendInstr):
         def __init__(self, target: Label) -> None:
             super().__init__(InstrKind.JMP, [], [], target)
             self.target = target
@@ -148,9 +148,9 @@ class Riscv:
         def __str__(self) -> str:
             return "j " + str(self.target)
 
-    class SPAdd(NativeInstr):
+    class SPAdd(AsmInstr):
         def __init__(self, offset: int) -> None:
-            super().__init__(InstrKind.SEQ, [Riscv.SP], [Riscv.SP], None)
+            super().__init__(InstrKind.SEQ, None)
             self.offset = offset
 
         def __str__(self) -> str:
@@ -159,31 +159,35 @@ class Riscv:
                 str(Riscv.SP), str(Riscv.SP), str(self.offset)
             )
 
-    class NativeStoreWord(NativeInstr):
+    class NativeStoreWord(AsmInstr):
         def __init__(self, src: Reg, base: Reg, offset: int) -> None:
-            super().__init__(InstrKind.SEQ, [], [src, base], None)
+            super().__init__(InstrKind.SEQ, None)
+            self.src = src
+            self.base = base
             self.offset = offset
 
         def __str__(self) -> str:
             assert -2048 <= self.offset <= 2047  # Riscv imm [11:0]
             return "sw " + Riscv.FMT_OFFSET.format(
-                str(self.srcs[0]), str(self.offset), str(self.srcs[1])
+                str(self.src), str(self.offset), str(self.base)
             )
 
-    class NativeLoadWord(NativeInstr):
+    class NativeLoadWord(AsmInstr):
         def __init__(self, dst: Reg, base: Reg, offset: int) -> None:
-            super().__init__(InstrKind.SEQ, [dst], [base], None)
+            super().__init__(InstrKind.SEQ, None)
+            self.dst = dst
+            self.base = base
             self.offset = offset
 
         def __str__(self) -> str:
             assert -2048 <= self.offset <= 2047  # Riscv imm [11:0]
             return "lw " + Riscv.FMT_OFFSET.format(
-                str(self.dsts[0]), str(self.offset), str(self.srcs[0])
+                str(self.dst), str(self.offset), str(self.base)
             )
 
-    class NativeReturn(NativeInstr):
+    class NativeReturn(AsmInstr):
         def __init__(self) -> None:
-            super().__init__(InstrKind.RET, [Riscv.RA], [], None)
+            super().__init__(InstrKind.RET, None)
 
         def __str__(self) -> str:
             return "ret"

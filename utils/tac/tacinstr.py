@@ -2,13 +2,11 @@ from enum import Enum, auto, unique
 from typing import Any, Optional, Union
 
 from utils.label.label import Label
-from utils.tac.nativeinstr import NativeInstr
 from utils.tac.reg import Reg
 
 from .tacop import *
 from .tacvisitor import TACVisitor
 from .temp import Temp
-
 
 class TACInstr:
     def __init__(
@@ -37,17 +35,6 @@ class TACInstr:
 
     def isReturn(self) -> bool:
         return self.kind == InstrKind.RET
-
-    def toNative(self, dstRegs: list[Reg], srcRegs: list[Reg]) -> NativeInstr:
-        oldDsts = dstRegs
-        oldSrcs = srcRegs
-        self.dsts = dstRegs
-        self.srcs = srcRegs
-        instrString = self.__str__()
-        newInstr = NativeInstr(self.kind, dstRegs, srcRegs, self.label, instrString)
-        self.dsts = oldDsts
-        self.srcs = oldSrcs
-        return newInstr
 
     def accept(self, v: TACVisitor) -> None:
         pass
