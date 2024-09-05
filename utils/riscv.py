@@ -2,7 +2,7 @@ from typing import Final, Optional
 
 from utils.label.funclabel import FuncLabel
 from utils.label.label import Label, LabelKind
-from utils.tac.nativeinstr import AsmInstr
+from utils.tac.asminstr import AsmInstr
 from utils.tac.reg import Reg
 from utils.tac.tacop import InstrKind
 from utils.tac.temp import Temp

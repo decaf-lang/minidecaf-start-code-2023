@@ -3,7 +3,7 @@ from utils.tac.temp import Temp
 from .tacop import *
 from utils.label.label import Label, LabelKind
 from typing import Final, Optional
-from utils.tac.nativeinstr import AsmInstr
+from utils.tac.asminstr import AsmInstr
 
 # Backend TAC instructions
 class BackendInstr:

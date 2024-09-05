@@ -8,7 +8,7 @@ from utils.tac.tacfunc import TACFunc
 from utils.tac.tacinstr import *
 from utils.tac.tacvisitor import TACVisitor
 from utils.asmcodeprinter import AsmCodePrinter
-from utils.tac.nativeinstr import AsmInstr
+from utils.tac.asminstr import AsmInstr
 from ..subroutineinfo import SubroutineInfo
 
 """

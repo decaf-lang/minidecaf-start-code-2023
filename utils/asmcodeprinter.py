@@ -1,5 +1,5 @@
 from utils.label.label import Label
-from utils.tac.nativeinstr import AsmInstr
+from utils.tac.asminstr import AsmInstr
 from utils.tac.tacinstr import TACInstr
 
 
