@@ -21,7 +21,7 @@ class AsmCodePrinter:
 
     def printInstr(self, instr: AsmInstr):
         if instr.isLabel():
-            self.buffer += str(instr.label) + ":"
+            self.buffer += str(instr)
         else:
             self.buffer += self.INDENTS + str(instr)
         self.buffer += "\n"
