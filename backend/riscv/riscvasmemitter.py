@@ -157,7 +157,7 @@ class RiscvSubroutineEmitter():
         self.buf.append(instr)
 
     def emitLabel(self, label: Label):
-        self.buf.append(Riscv.RiscvLabel(label).toAsm([], []))
+        self.buf.append(Riscv.RiscvLabel(label))
 
     
     def emitFunc(self):
