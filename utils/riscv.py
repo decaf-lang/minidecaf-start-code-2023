@@ -2,7 +2,6 @@ from typing import Final, Optional
 
 from utils.label.funclabel import FuncLabel
 from utils.label.label import Label, LabelKind
-from utils.tac.asminstr import AsmInstr
 from utils.tac.reg import Reg
 from utils.tac.tacop import InstrKind
 from utils.tac.temp import Temp
@@ -148,9 +147,9 @@ class Riscv:
         def __str__(self) -> str:
             return "j " + str(self.target)
 
-    class SPAdd(AsmInstr):
+    class SPAdd(BackendInstr):
         def __init__(self, offset: int) -> None:
-            super().__init__(InstrKind.SEQ, None)
+            super().__init__(InstrKind.SEQ, [], [], None)
             self.offset = offset
 
         def __str__(self) -> str:
@@ -159,9 +158,9 @@ class Riscv:
                 str(Riscv.SP), str(Riscv.SP), str(self.offset)
             )
 
-    class NativeStoreWord(AsmInstr):
+    class NativeStoreWord(BackendInstr):
         def __init__(self, src: Reg, base: Reg, offset: int) -> None:
-            super().__init__(InstrKind.SEQ, None)
+            super().__init__(InstrKind.SEQ, [], [], None)
             self.src = src
             self.base = base
             self.offset = offset
@@ -172,9 +171,9 @@ class Riscv:
                 str(self.src), str(self.offset), str(self.base)
             )
 
-    class NativeLoadWord(AsmInstr):
+    class NativeLoadWord(BackendInstr):
         def __init__(self, dst: Reg, base: Reg, offset: int) -> None:
-            super().__init__(InstrKind.SEQ, None)
+            super().__init__(InstrKind.SEQ, [], [], None)
             self.dst = dst
             self.base = base
             self.offset = offset
@@ -185,9 +184,9 @@ class Riscv:
                 str(self.dst), str(self.offset), str(self.base)
             )
 
-    class NativeReturn(AsmInstr):
+    class NativeReturn(BackendInstr):
         def __init__(self) -> None:
-            super().__init__(InstrKind.RET, None)
+            super().__init__(InstrKind.RET, [], [], None)
 
         def __str__(self) -> str:
             return "ret"

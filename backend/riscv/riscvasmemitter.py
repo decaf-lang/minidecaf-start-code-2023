@@ -8,7 +8,7 @@ from utils.tac.tacfunc import TACFunc
 from utils.tac.tacinstr import *
 from utils.tac.tacvisitor import TACVisitor
 from utils.asmcodeprinter import AsmCodePrinter
-from utils.tac.asminstr import AsmInstr
+from utils.tac.backendinstr import BackendInstr
 from ..subroutineinfo import SubroutineInfo
 
 """
@@ -115,7 +115,7 @@ class RiscvSubroutineEmitter():
         self.nextLocalOffset = 4 * len(Riscv.CalleeSaved) + 4
         
         # the buf which stored all the NativeInstrs in this function
-        self.buf: list[AsmInstr] = []
+        self.buf: list[BackendInstr] = []
 
         # from temp to int
         # record where a temp is stored in the stack
@@ -153,7 +153,7 @@ class RiscvSubroutineEmitter():
 
     # add a NativeInstr to buf
     # when calling the fuction emitEnd, all the instr in buf will be transformed to RiscV code
-    def emitAsm(self, instr: AsmInstr):
+    def emitAsm(self, instr: BackendInstr):
         self.buf.append(instr)
 
     def emitLabel(self, label: Label):

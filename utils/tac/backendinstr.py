@@ -3,7 +3,6 @@ from utils.tac.temp import Temp
 from .tacop import *
 from utils.label.label import Label, LabelKind
 from typing import Final, Optional
-from utils.tac.asminstr import AsmInstr
 
 # Backend TAC instructions
 class BackendInstr:
@@ -18,9 +17,6 @@ class BackendInstr:
         self.dsts = dsts.copy()
         self.srcs = srcs.copy()
         self.label = label
-        
-    def fill_regs(dsts: list[Reg], srcs: list[Reg]):
-        pass
     
     def isLabel(self) -> bool:
         return self.kind is InstrKind.LABEL
@@ -37,9 +33,6 @@ class BackendInstr:
     def getWritten(self) -> list[int]:
         return [dst.index for dst in self.dsts]
     
-    def toAsm(self, dstRegs: list[Reg], srcRegs: list[Reg]) -> AsmInstr:
+    def fillRegs(self, dstRegs: list[Reg], srcRegs: list[Reg]) -> None:
         self.dsts = dstRegs
         self.srcs = srcRegs
-        instrString = self.__str__()
-        newInstr = AsmInstr(self.kind, instrString)
-        return newInstr

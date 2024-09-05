@@ -1,5 +1,5 @@
 from utils.label.label import Label
-from utils.tac.asminstr import AsmInstr
+from utils.tac.backendinstr import BackendInstr
 from utils.tac.tacinstr import TACInstr
 
 
@@ -19,7 +19,7 @@ class AsmCodePrinter:
     def printLabel(self, label: Label):
         self.buffer += str(label.name) + ":\n"
 
-    def printInstr(self, instr: AsmInstr):
+    def printInstr(self, instr: BackendInstr):
         if instr.isLabel():
             self.buffer += str(instr)
         else:

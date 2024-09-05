@@ -91,8 +91,8 @@ class BruteRegAlloc(RegAlloc):
                 dstRegs.append(temp)
             else:
                 dstRegs.append(self.allocRegFor(temp, False, loc.liveIn, subEmitter))
-
-        subEmitter.emitAsm(instr.toAsm(dstRegs, srcRegs))
+        instr.fillRegs(dstRegs, srcRegs)
+        subEmitter.emitAsm(instr)
 
     def allocRegFor(
         self, temp: Temp, isRead: bool, live: set[int], subEmitter: RiscvSubroutineEmitter
