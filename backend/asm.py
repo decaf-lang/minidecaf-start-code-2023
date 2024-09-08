@@ -16,10 +16,10 @@ class Asm:
 
     def transform(self, prog: TACProg):
         analyzer = LivenessAnalyzer()
-        emitter = RiscvAsmEmitter(Riscv.AllocatableRegs, Riscv.CallerSaved)
         reg_alloc = BruteRegAlloc(emitter)
         
         for func in prog.funcs:
+            emitter = RiscvAsmEmitter(Riscv.AllocatableRegs, Riscv.CallerSaved)
             pair = emitter.selectInstr(func)
             builder = CFGBuilder()
             cfg: CFG = builder.buildFrom(pair[0])
