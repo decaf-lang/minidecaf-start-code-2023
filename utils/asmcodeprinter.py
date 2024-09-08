@@ -1,6 +1,5 @@
 from utils.label.label import Label
 from utils.tac.backendinstr import BackendInstr
-from utils.tac.tacinstr import TACInstr
 
 
 class AsmCodePrinter:

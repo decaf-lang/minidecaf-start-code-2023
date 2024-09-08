@@ -1,8 +1,8 @@
 from backend.dataflow.basicblock import BasicBlock, BlockKind
 from backend.dataflow.loc import Loc
 from utils.error import IllegalArgumentException, NullPointerException
-from utils.tac.tacinstr import InstrKind, TACInstr
-
+from utils.tac.tacinstr import InstrKind
+from utils.tac.backendinstr import BackendInstr
 from .cfg import CFG
 
 """
@@ -17,7 +17,7 @@ class CFGBuilder:
         self.currentBBLabel = None
         self.labelsToBBs = {}
 
-    def buildFrom(self, seq: list[TACInstr]):
+    def buildFrom(self, seq: list[BackendInstr]):
         for item in seq:
             if item.isLabel():
                 if item.label.isFunc():
